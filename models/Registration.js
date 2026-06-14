@@ -1,0 +1,45 @@
+const mongoose = require('mongoose');
+
+const registrationSchema = new mongoose.Schema(
+  {
+    registration_date: String,
+    bnatp: String,
+    phlebotomy: String,
+    recert: String,
+    first_name: String,
+    last_name: String,
+    middle_name: String,
+    dob: String,
+    current_phone: String,
+    current_address: String,
+    city: String,
+    state: String,
+    zip: String,
+    us_citizen: String,
+    email: String,
+    communicable_diseases: String,
+    criminal_background_check: String,
+    commit_complete_course: String,
+    certified_nursing_assistant: String,
+    phlebotomy_technician: String,
+    recertification_of_skills: String,
+    rate_yourself: String,
+    cooperation_other: String,
+    afraid_of_blood_other: String,
+    lift_50_70_lbs: String,
+    injuries: String,
+    currently_working: String,
+    employment_affect_class_schedule: String,
+    personal_support_completion_course_responsibity: String,
+    learning_difficulty: String,
+    financial_obligations: String,
+    about_hugs_inc_courses: String,
+    referred_by: String,
+    sponso: String,
+    walk_in: String,
+    course_selected: String,
+  },
+  { timestamps: true, strict: false }
+);
+
+module.exports = mongoose.model('Registration', registrationSchema);

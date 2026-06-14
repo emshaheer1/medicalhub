@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Medical Training Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <img src="/assets/logo.png" alt="Medical Training Hub" class="login-logo" />
+      <h1>Admin Dashboard</h1>
+      <p class="subtitle">Sign in to view registration entries</p>
+
+      <div id="errorMsg" class="error-msg"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="admin@medicaltraininghub.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('mth_token')) {
+      window.location.href = '/dashboard';
+    }
+
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const loginBtn = document.getElementById('loginBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.remove('visible');
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('mth_token', data.token);
+          localStorage.setItem('mth_admin', JSON.stringify(data.admin));
+          localStorage.setItem('mth_last_check', new Date().toISOString());
+          window.location.href = '/dashboard';
+        } else {
+          errorMsg.textContent = data.message || 'Login failed';
+          errorMsg.classList.add('visible');
+        }
+      } catch {
+        errorMsg.textContent = 'Unable to connect to server';
+        errorMsg.classList.add('visible');
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Sign In';
+      }
+    });
+  </script>
+</body>
+</html>
